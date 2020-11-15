@@ -66,7 +66,7 @@ public:
 
     bool checkResult(int currentType) {
         bool hasResult = true;
-        if (chess->checkFive(currentType))
+        if (chess->checkWin(currentType))
             setWinner(currentType);
         else if (chess->checkFull())
             setWinner(3);

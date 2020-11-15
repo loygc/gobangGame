@@ -27,8 +27,8 @@ Game::~Game() {
 void Game::moveMouse(int mX, int mY) {
     mouseX = mX;
     mouseY = mY;
-    int tempX = (mX - 72) / 35;
-    int tempY = (mY - 61) / 35;
+    int tempX = (mX - 72) / 33.7;
+    int tempY = (mY - 61) / 33.7;
     if (tempX >= 0 && tempX < 15 && tempY >= 0 && tempY < 15) {
         targetX = tempX;
         targetY = tempY;

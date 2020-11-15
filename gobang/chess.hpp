@@ -41,7 +41,7 @@ public:
 
     bool judgeLevel(int selfType, bool attack, int diffTest, int levelDemand);
 
-    bool checkFive(int type);
+    bool checkWin(int type);
 
     int getSetting(int settingNum);
 

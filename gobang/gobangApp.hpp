@@ -11,7 +11,8 @@
 #include "eventHandle.hpp"
 #include "drawHandle.hpp"
 
-int gobangapp() {
+int gobangApp()
+{
     bool quit = false;
     Timer fps;
     if (!init())

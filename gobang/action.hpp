@@ -50,7 +50,7 @@ void apply_surface(int x, int y, SDL_Surface *source, SDL_Surface *destination, 
 bool load_files() {
     //Load the images
     welcome = load_image("resource/pic/welcome.bmp");
-    table = load_image("resource/pic/table.bmp");
+    table = load_image("resource/pic/gobangchessboard.bmp");
     piece = load_image("resource/pic/piece.bmp");
     blackWin = load_image("resource/pic/blackWin.bmp");
     whiteWin = load_image("resource/pic/whiteWin.bmp");
@@ -168,26 +168,25 @@ bool init() {
     }
 
     //Set up the screen
-    window = SDL_CreateWindow("Five", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
+    window = SDL_CreateWindow("gobangGame by Loyio", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
                               SDL_WINDOW_SHOWN);
     screen = SDL_GetWindowSurface(window);
 
-    //If there was an error in setting up the screen
     if (screen == NULL) {
         return false;
     }
 
-    //Initialize SDL_ttf
+    //初始化SDL_ttf
     if (TTF_Init() == -1) {
         return false;
     }
 
-    //Initialize SDL_mixer
+    //初始化SDL_mixer
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
         return false;
     }
 
-    //Initialize SDL_net
+    //初始化SDL_net
     if (SDLNet_Init() == -1) {
         return false;
     }

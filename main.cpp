@@ -8,7 +8,9 @@
 #include <iostream>
 #include "gobang/gobangApp.hpp"
 
+
+
 int main(int argc, const char * argv[]) {
-    gobangapp();
+    gobangApp();
     return 0;
 }

@@ -35,15 +35,20 @@ Chess::Chess() {
     }
 
     while (fin >> modelX[modelNum] >> modelY[modelNum]) {
-        for (int ii = 0; ii < modelX[modelNum]; ii++)
-            for (int jj = 0; jj < modelY[modelNum]; jj++)
+        for (int ii = 0; ii < modelX[modelNum]; ii++){
+            for (int jj = 0; jj < modelY[modelNum]; jj++){
                 fin >> model[modelNum][ii][jj];
+            }
+        }
         modelNum++;
     }
     fin.close();
     currentPieceType = 1;
 }
 
+/*
+ 向坐标位置填充类型棋子
+ */
 bool Chess::addPiece(int x, int y, int type) {
     if (type != currentPieceType)
         return false;
@@ -61,6 +66,9 @@ bool Chess::addPiece(int x, int y, int type) {
     }
 }
 
+/*
+ 查看当前坐标的棋子填充状态
+ */
 int Chess::hasPiece(int x, int y) {
     if (x < 0 || x > 14 || y < 0 || y > 14)
         return -1;
@@ -70,9 +78,6 @@ int Chess::hasPiece(int x, int y) {
 
 //Model Labels: 0 - whatever; 1 - check object; -1 - space
 void Chess::checkModel(int type, int diff, int x, int y, int model[][10], int level[15][15]) {
-    // For Test
-    // ofstream fout;                        //
-    // fout.open("test.txt",ios_base::app);    //
 
     for (int i = 0; i < 16 - x; i++)
         for (int j = 0; j < 16 - y; j++) {
@@ -113,9 +118,12 @@ void Chess::checkModel(int type, int diff, int x, int y, int model[][10], int le
                         }
             }
         }
-    //fout.close(); // For test
 }
 
+
+/*
+ 简单的棋盘算法
+ */
 void Chess::AIWork(int type) {
     if (pieceOnBoard == 0) {
         int x = rand() % 3 + 6;
@@ -178,7 +186,12 @@ void Chess::AIWork(int type) {
                         }
 }
 
-bool Chess::checkFive(int type) {
+
+/*
+ 判断当前棋盘中是否达成获胜条件
+ */
+bool Chess::checkWin(int type) {
+    //对行进行循环判断
     for (int i = 0; i < 15; i++)
         for (int j = 0; j < 11; j++)
             if (piece[i][j] == type &&
@@ -192,6 +205,7 @@ bool Chess::checkFive(int type) {
                 }
                 return true;
             }
+    //对列进行循环判断
     for (int i2 = 0; i2 < 11; i2++)
         for (int j2 = 0; j2 < 15; j2++)
             if (piece[i2][j2] == type &&
@@ -205,6 +219,7 @@ bool Chess::checkFive(int type) {
                 }
                 return true;
             }
+    //对反斜杠直线进行循环判断
     for (int i3 = 0; i3 < 11; i3++)
         for (int j3 = 0; j3 < 11; j3++)
             if (piece[i3][j3] == type &&
@@ -218,6 +233,7 @@ bool Chess::checkFive(int type) {
                 }
                 return true;
             }
+    //对斜杆直线进行循环判断
     for (int i4 = 0; i4 < 11; i4++)
         for (int j4 = 0; j4 < 11; j4++)
             if (piece[i4 + 4][j4] == type &&
@@ -249,13 +265,13 @@ void Chess::transformModel(int x, int y, int model[][10], int &tModelNum, int tM
     int num = 1;
     for (int i = 1; i < 8; i++, num++) {
         //create:
-        if (i == 4) {//���·�ת
+        if (i == 4) {
             tModelX[num] = tempX;
             tModelY[num] = tempY;
             for (int ii = 0; ii < tempX; ii++)
                 for (int jj = 0; jj < tempY; jj++)
                     tModel[num][tempX - 1 - ii][jj] = temp[ii][jj];
-        } else {//��ʱ����ת90��
+        } else {
             tModelX[num] = tempY;
             tModelY[num] = tempX;
             for (int ii = 0; ii < tempX; ii++)
@@ -268,20 +284,6 @@ void Chess::transformModel(int x, int y, int model[][10], int &tModelNum, int tM
             for (int j3 = 0; j3 < tempY; j3++)
                 temp[i3][j3] = tModel[num][i3][j3];
 
-        /*For Test:
-        ofstream fout;
-        fout.open("test.txt",ios_base::app);
-        fout << "tModel[" << num << "] , X = " << tModelX[num] << " Y = " << tModelY[num] << "\n";
-        for(int p = 0; p < tModelX[num]; p++){
-            for(int q = 0; q < tModelY[num];q++){
-                fout << tModel[num][p][q];
-            }
-            fout << endl;
-        }
-        fout.close();
-        */
-
-        //check:
         bool pass = true;
         for (int ii = 0; ii < num; ii++) {
             bool ok = false;
@@ -354,6 +356,9 @@ bool Chess::judgeLevel(int selfType, bool attack, int diffTest, int levelDemand)
         return false;
 }
 
+/*
+ 重置棋盘
+ */
 void Chess::resetPiece() {
     for (int i = 0; i < 15; i++)
         for (int j = 0; j < 15; j++)
@@ -380,6 +385,10 @@ void Chess::changeSetting(int settingNum, int value) {
         setting[settingNum] = value;
 }
 
+
+/*
+ 判断棋盘是否填满
+ */
 bool Chess::checkFull() {
     if (pieceOnBoard >= 15 * 15)
         return true;
@@ -387,6 +396,9 @@ bool Chess::checkFull() {
         return false;
 }
 
+/*
+ 棋盘中棋子的总数
+ */
 int Chess::pieceNum() {
     return pieceOnBoard;
 }
