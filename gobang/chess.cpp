@@ -104,8 +104,8 @@ void Chess::checkModel(int type, int diff, int x, int y, int model[][10], int le
                     break;
             }
             if (diffGet == diff && ok == true) {
-                for (int i3 = 0; i3 < x; i3++)
-                    for (int j3 = 0; j3 < y; j3++)
+                for (int i3 = 0; i3 < x; i3++){
+                    for (int j3 = 0; j3 < y; j3++){
                         if (diff == 0) {
                             if (model[i3][j3] == -1)
                                 level[i + i3][j + j3]++;
@@ -116,6 +116,8 @@ void Chess::checkModel(int type, int diff, int x, int y, int model[][10], int le
                                 level[i + i3][j + j3]++;
                             }
                         }
+                    }
+                }
             }
         }
 }
@@ -125,15 +127,16 @@ void Chess::checkModel(int type, int diff, int x, int y, int model[][10], int le
  简单的棋盘算法
  */
 void Chess::AIWork(int type) {
+    //中心区域生成第一步棋
     if (pieceOnBoard == 0) {
         int x = rand() % 3 + 6;
         int y = rand() % 3 + 6;
         addPiece(x, y, type);
     } else if (pieceOnBoard <= 4) {
         bool findEnermy = false;
-        for (int i0 = 0; i0 < 15; i0++) {
-            for (int j0 = 0; j0 < 15; j0++)
-                if (piece[i0][j0] == 3 - type) {
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++)
+                if (piece[i][j] == 3 - type) {
                     int temp = rand() % 8;
                     int dx, dy;
                     if (temp < 3) {
@@ -146,18 +149,18 @@ void Chess::AIWork(int type) {
                         dx = temp == 3 ? -1 : 1;
                         dy = 0;
                     }
-                    addPiece(i0 + dx, j0 + dy, type);
+                    addPiece(i + dx, j + dy, type);
                     findEnermy = true;
                     break;
                 }
             if (findEnermy)
                 break;
         }
-    } else if (!judgeLevel(type, true, 0, setting[0]))
-        if (!judgeLevel(type, false, 0, setting[1]))
-            if (!judgeLevel(type, true, 1, setting[2]))
-                if (!judgeLevel(type, false, 1, setting[3]))
-                    if (!judgeLevel(type, true, 2, setting[4]))
+    } else if (!judgeLevel(type, true, 0, setting[0])){
+        if (!judgeLevel(type, false, 0, setting[1])){
+            if (!judgeLevel(type, true, 1, setting[2])){
+                if (!judgeLevel(type, false, 1, setting[3])){
+                    if (!judgeLevel(type, true, 2, setting[4])){
                         if (!judgeLevel(type, false, 2, setting[5])) {
                             bool find = false;
                             for (int i = 0; i < 15; i++) {
@@ -184,6 +187,11 @@ void Chess::AIWork(int type) {
                                     break;
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -250,8 +258,7 @@ bool Chess::checkWin(int type) {
     return false;
 }
 
-void Chess::transformModel(int x, int y, int model[][10], int &tModelNum, int tModelX[], int tModelY[],
-                           int tModel[][10][10]) {
+void Chess::transformModel(int x, int y, int model[][10], int &tModelNum, int tModelX[], int tModelY[], int tModel[][10][10]) {
     int temp[10][10] = {{0}};
     int tempX = x;
     int tempY = y;
@@ -268,21 +275,27 @@ void Chess::transformModel(int x, int y, int model[][10], int &tModelNum, int tM
         if (i == 4) {
             tModelX[num] = tempX;
             tModelY[num] = tempY;
-            for (int ii = 0; ii < tempX; ii++)
-                for (int jj = 0; jj < tempY; jj++)
+            for (int ii = 0; ii < tempX; ii++){
+                for (int jj = 0; jj < tempY; jj++){
                     tModel[num][tempX - 1 - ii][jj] = temp[ii][jj];
+                }
+            }
         } else {
             tModelX[num] = tempY;
             tModelY[num] = tempX;
-            for (int ii = 0; ii < tempX; ii++)
-                for (int jj = 0; jj < tempY; jj++)
+            for (int ii = 0; ii < tempX; ii++){
+                for (int jj = 0; jj < tempY; jj++){
                     tModel[num][jj][tempX - 1 - ii] = temp[ii][jj];
+                }
+            }
         }
         tempX = tModelX[num];
         tempY = tModelY[num];
-        for (int i3 = 0; i3 < tempX; i3++)
-            for (int j3 = 0; j3 < tempY; j3++)
+        for (int i3 = 0; i3 < tempX; i3++){
+            for (int j3 = 0; j3 < tempY; j3++){
                 temp[i3][j3] = tModel[num][i3][j3];
+            }
+        }
 
         bool pass = true;
         for (int ii = 0; ii < num; ii++) {
@@ -290,11 +303,12 @@ void Chess::transformModel(int x, int y, int model[][10], int &tModelNum, int tM
             if (tModelX[ii] != tModelX[num] || tModelY[ii] != tModelY[num])
                 continue;
             for (int i3 = 0; i3 < tModelX[ii]; i3++) {
-                for (int i4 = 0; i4 < tModelY[ii]; i4++)
+                for (int i4 = 0; i4 < tModelY[ii]; i4++){
                     if (tModel[ii][i3][i4] != tModel[num][i3][i4]) {
                         ok = true;
                         break;
                     }
+                }
                 if (ok)
                     break;
             }
@@ -318,14 +332,18 @@ bool Chess::judgeLevel(int selfType, bool attack, int diffTest, int levelDemand)
         int tModelY[16];
         int tModel[16][10][10] = {{{0}}};
         transformModel(modelX[i], modelY[i], model[i], tModelNum, tModelX, tModelY, tModel);
-        for (int ii = 0; ii < tModelNum; ii++)
+        for (int ii = 0; ii < tModelNum; ii++){
             checkModel(targetType, diffTest, tModelX[ii], tModelY[ii], tModel[ii], level);
+        }
     }
     int maxLevel = 0;
-    for (int m = 0; m < 15; m++)
-        for (int n = 0; n < 15; n++)
-            if (level[m][n] > maxLevel)
+    for (int m = 0; m < 15; m++){
+        for (int n = 0; n < 15; n++){
+            if (level[m][n] > maxLevel){
                 maxLevel = level[m][n];
+            }
+        }
+    }
 
     if (maxLevel >= levelDemand) {
         int maxLevelNum = 0;
@@ -334,7 +352,7 @@ bool Chess::judgeLevel(int selfType, bool attack, int diffTest, int levelDemand)
         int maxLevelY[maxChoiceNum] = {0};
         bool getMax = false;
         for (int i3 = 0; i3 < 15; i3++) {
-            for (int j3 = 0; j3 < 15; j3++)
+            for (int j3 = 0; j3 < 15; j3++){
                 if (level[i3][j3] == maxLevel) {
                     maxLevelX[maxLevelNum] = i3;
                     maxLevelY[maxLevelNum] = j3;
@@ -344,6 +362,7 @@ bool Chess::judgeLevel(int selfType, bool attack, int diffTest, int levelDemand)
                         break;
                     }
                 }
+            }
             if (getMax)
                 break;
         }
